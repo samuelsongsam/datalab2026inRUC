@@ -50,10 +50,15 @@ int bitXor(int x, int y) {
  *   1 if x and y have the same sign , 0 otherwise.
  */
 int samesign(int x, int y) {
-    x = (!!x) | (x >> 31);
-    y = (!!y) | (y >> 31);
-    return !(x ^ y);
-}
+    if (!x) {
+        return !y;
+    }
+    
+    if (!y) {
+        return 0;
+    }
+    
+    return !((x ^ y) >> 31);}
 
 /*
  * logtwo - Calculate the base-2 logarithm of a positive integer using bit
@@ -65,16 +70,23 @@ int samesign(int x, int y) {
  *   Difficulty: 4
  */
 int logtwo(int v) {
-    int b16 = !!(v >> 16) << 4;
+    int b16, b8, b4, b2, b1;
+    
+    b16 = ((v >> 16) > 0) << 4;
     v = v >> b16;
-    int b8 = !!(v >> 8) << 3;
+    
+    b8 = ((v >> 8) > 0) << 3;
     v = v >> b8;
-    int b4 = !!(v >> 4) << 2;
+    
+    b4 = ((v >> 4) > 0) << 2;
     v = v >> b4;
-    int b2 = !!(v >> 2) << 1;
+    
+    b2 = ((v >> 2) > 0) << 1;
     v = v >> b2;
-    int b1 = !!(v >> 1);
-    return b16 + b8 + b4 + b2 + b1;
+    
+    b1 = (v >> 1) > 0;
+    
+    return b16 | b8 | b4 | b2 | b1;
 }
 
 /*
